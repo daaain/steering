@@ -65,6 +65,11 @@ module Steering
       Source.known_helpers
     end
 
+    def add_helper(name, helper)
+      Source.known_helpers[name.to_sym] = true
+      @context << ";" + helper
+    end
+
     def render(template, locals = {})
       context_for(template).call("template", locals)
     end
