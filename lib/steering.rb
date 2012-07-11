@@ -36,6 +36,14 @@ module Steering
     def self.version
       @version ||= context.eval("Handlebars.VERSION")
     end
+
+    def self.helpers
+      @helpers ||= ""
+    end
+
+    def self.helpers=(helpers)
+      @helpers = helpers
+    end
   end
 
   class << self
@@ -67,7 +75,8 @@ module Steering
 
     def add_helper(name, helper)
       Source.known_helpers[name.to_sym] = true
-      @context << ";" + helper
+      Source.helpers << ";" + helper
+      Source.context = ExecJS.compile(Source.contents + ";" + Source.helpers)
     end
 
     def render(template, locals = {})
